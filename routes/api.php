@@ -27,3 +27,7 @@ Route::post('/book', 'BookController@save');
 Route::put('/book/{id}', 'BookController@update');
 Route::delete('book/{id}', 'BookController@delete');
 
+Route::post('/author', 'AuthorController@save');
+Route::get('/author/{id}', 'AuthorController@getById');
+
+

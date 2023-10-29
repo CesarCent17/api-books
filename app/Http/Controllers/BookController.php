@@ -30,37 +30,43 @@ class BookController extends Controller
         $data = $request->all();
         $validator = Validator::make( $data, [
             'name' => 'required|string',
-            'author' => 'required|string'
+            'author_id' => 'required|exists:authors,id',
+            // 'author' => 'required|string'
         ],
         [
             'name.required' => 'name is required',
             'name.string' => 'name must be of type string',
-            'author.required' => 'author is required',
-            'author.string' => 'author must be of type string',
+            'author_id.required' => 'author is required',
+            'author_id.exists' => 'author does not exist',
+            // 'author.required' => 'author is required',
+            // 'author.string' => 'author must be of type string',
         ]
         );
 
         if($validator->fails()){
             return response()->json(['error' => $validator->getMessageBag()], 400);
         }
-        $book = Book::create($data);
+        // $book = Book::create($data);
+
+        $book = Book::create([
+            'name' => $data['name'],
+            'author_id' => $data['author_id'],
+        ]);
         return response()->json([$book, 201]);
     }
 
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        $validator = Validator::make( $data, [
+        $validator = Validator::make($data, [
             'name' => 'required|string',
-            'author' => 'required|string'
-        ],
-        [
+            'author_id' => 'required|exists:authors,id',
+        ], [
             'name.required' => 'name is required',
             'name.string' => 'name must be of type string',
-            'author.required' => 'author is required',
-            'author.string' => 'author must be of type string',
-        ]
-        );
+            'author_id.required' => 'author is required',
+            'author_id.exists' => 'author does not exist',
+        ]);
 
         if($validator->fails()){
             return response()->json(['error' => $validator->getMessageBag()], 400);
@@ -69,7 +75,11 @@ class BookController extends Controller
         if(!$book){
             return response()->json(['message' => 'Book not found'], 404);
         }
-        $book->update($data);
+
+        $book->update([
+            'name' => $data['name'],
+            'author_id' => $data['author_id'],
+        ]);
         return response()->json([$data, 200]);
     }
 
