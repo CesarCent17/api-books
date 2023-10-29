@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Author;
 use Illuminate\Support\Facades\Validator as validator;
+use App\Http\Responses\JsonResponse;
 
 class AuthorController extends Controller
 {
@@ -30,7 +31,9 @@ class AuthorController extends Controller
         }
 
         $author = Author::create($data);
-        return response()->json([$author, 201]);
+        $response = new JsonResponse(true, 'Author created successfully', $author, 201);
+        return response()->json($response, $response->statusCode);
+        // return response()->json([$author, 201]);
     }
 
     public function getById($id)
@@ -39,6 +42,7 @@ class AuthorController extends Controller
         if(!$author){
             return response()->json(['message' => 'Author not found'], 404);
         }
-        return response()->json($author, 200);
+        $response = new JsonResponse(true, 'Author retrieved successfully', $author, 200);
+        return response()->json($response, $response->statusCode);
     }
 }
